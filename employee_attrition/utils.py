@@ -41,6 +41,7 @@ def preprocess_employee_input(employee_input, scaler, artifacts):
         drop_first=True,
     )
     encoded = encoded.reindex(columns=artifacts["encoded_columns"], fill_value=0)
+    encoded.loc[:, artifacts["numeric_cols"]] = encoded[artifacts["numeric_cols"]].astype(float)
     encoded.loc[:, artifacts["numeric_cols"]] = scaler.transform(
         encoded[artifacts["numeric_cols"]]
     )
