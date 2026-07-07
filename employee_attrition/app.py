@@ -16,7 +16,7 @@ from utils import (
 
 
 st.set_page_config(
-    page_title="Employee Attrition Prediction",
+    page_title="Employee Attrition Intelligence",
     page_icon="HR",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -118,14 +118,20 @@ df = load_data()
 model, scaler, artifacts = load_model_bundle()
 metrics = metric_lookup(artifacts)
 
-st.sidebar.title("HR Analytics")
+st.sidebar.title("Workforce Intelligence")
 page = st.sidebar.radio(
-    "Navigate",
-    ["Home", "Data Analysis", "Prediction", "Model Performance", "About"],
+    "Navigation",
+    [
+        "Executive Overview",
+        "Workforce Analytics",
+        "Risk Assessment",
+        "Model Performance",
+        "Governance",
+    ],
 )
 st.sidebar.markdown("---")
-st.sidebar.caption("Final model: Gradient Boosting")
-st.sidebar.caption(f"Decision threshold: {artifacts['threshold']:.2f}")
+st.sidebar.caption("Scoring model: Gradient Boosting")
+st.sidebar.caption(f"Risk threshold: {artifacts['threshold']:.2f}")
 
 
 def hero(title, text):
@@ -154,45 +160,45 @@ def metric_card(label, value):
 
 def show_footer():
     st.markdown(
-        "<div class='footer'>Employee Attrition Prediction | Streamlit HR Analytics Dashboard | Built from the original Jupyter Notebook implementation.</div>",
+        "<div class='footer'>Employee Attrition Intelligence | Workforce analytics and attrition risk monitoring</div>",
         unsafe_allow_html=True,
     )
 
 
 def home_page():
     hero(
-        "Employee Attrition Prediction",
-        "A portfolio-ready HR analytics dashboard built from the existing notebook pipeline, preserving preprocessing, model selection, evaluation outputs, and visual analysis.",
+        "Employee Attrition Intelligence Platform",
+        "Centralized workforce risk monitoring for retention planning, talent strategy, and executive people decisions.",
     )
 
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        metric_card("Employees", f"{df.shape[0]:,}")
+        metric_card("Workforce Records", f"{df.shape[0]:,}")
     with c2:
-        metric_card("Features", f"{df.shape[1] - 1}")
+        metric_card("Profile Attributes", f"{df.shape[1] - 1}")
     with c3:
-        metric_card("Attrition Rate", format_percent((df["Attrition"] == "Yes").mean()))
+        metric_card("Observed Attrition", format_percent((df["Attrition"] == "Yes").mean()))
     with c4:
         metric_card("ROC-AUC", f"{metrics['ROC-AUC']:.3f}")
 
     st.subheader("Problem Statement")
     st.write(
-        "The project predicts whether an employee is likely to leave the organization using IBM HR employee records. The goal is to support proactive retention planning by identifying high-risk employee profiles."
+        "Employee turnover affects workforce stability, operational continuity, and hiring costs. This platform identifies employees with elevated attrition risk using historical workforce data, enabling HR teams to prioritize retention actions and support workforce planning."
     )
 
     left, right = st.columns([1.1, 1])
     with left:
-        st.subheader("Dataset Information")
+        st.subheader("Workforce Data Summary")
         st.dataframe(
             pd.DataFrame(
                 {
-                    "Item": ["Source", "Rows", "Columns", "Target", "Class Balance"],
+                    "Item": ["Data Source", "Records", "Attributes", "Outcome Field", "Population Mix"],
                     "Details": [
-                        "IBM HR Employee Attrition dataset",
+                        "Historical IBM HR workforce records",
                         f"{df.shape[0]:,}",
                         f"{df.shape[1]}",
                         "Attrition: Yes / No",
-                        "Imbalanced, with most employees staying",
+                        "Retention-heavy workforce distribution",
                     ],
                 }
             ),
@@ -200,27 +206,27 @@ def home_page():
             hide_index=True,
         )
     with right:
-        st.subheader("Technologies Used")
+        st.subheader("Platform Components")
         st.write("Python, Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn, Plotly, Streamlit")
-        st.subheader("Algorithms Compared")
+        st.subheader("Model Benchmarks")
         st.write("Logistic Regression, Random Forest, Gradient Boosting")
-        st.subheader("Final Selected Model")
-        st.write("Gradient Boosting Classifier with a 0.25 decision threshold, selected for the best F1 Score in the notebook comparison.")
+        st.subheader("Operational Scoring Model")
+        st.write("Gradient Boosting Classifier with a 0.25 risk threshold, selected for the strongest F1 performance across benchmarked models.")
 
-    st.subheader("Workflow")
+    st.subheader("Scoring Workflow")
     st.graphviz_chart(
         """
         digraph {
             rankdir=LR;
             node [shape=box, style="rounded,filled", fillcolor="#f5f8fb", color="#9fb2c8", fontname="Arial"];
-            A [label="Raw HR Data"];
-            B [label="Clean Columns"];
-            C [label="Encode Categoricals"];
-            D [label="Scale Numeric Features"];
-            E [label="Select Top 25 Features"];
-            F [label="Train Compared Models"];
-            G [label="Gradient Boosting"];
-            H [label="Attrition Risk Prediction"];
+            A [label="Historical Workforce Data"];
+            B [label="Field Standardization"];
+            C [label="Categorical Encoding"];
+            D [label="Numeric Standardization"];
+            E [label="Risk Driver Selection"];
+            F [label="Model Benchmarking"];
+            G [label="Gradient Boosting Scoring"];
+            H [label="Attrition Risk Assessment"];
             A -> B -> C -> D -> E -> F -> G -> H;
         }
         """
@@ -229,19 +235,19 @@ def home_page():
 
 def data_analysis_page():
     hero(
-        "Data Analysis",
-        "Notebook EDA visuals are reused here as exported chart assets so the dashboard stays faithful to the original analysis.",
+        "Workforce Analytics",
+        "Historical workforce patterns, attrition concentration, and retention signals across organizational, demographic, and compensation dimensions.",
     )
     chart_groups = [
-        ("Attrition Distribution", "Employee_Attrition_Distribution.png"),
-        ("Department-wise Attrition", "Attrition_by_Department.png"),
-        ("Job Role Attrition", "Attrition_by_JobROle.png"),
-        ("Monthly Income vs Attrition", "MonthlyIncome_Vs_Attrition.png"),
-        ("Age Distribution", "Age_Distribution.png"),
-        ("Years at Company vs Attrition", "yearsAtCompany_vs_Attrition.png"),
-        ("Work-Life Balance vs Attrition", "WorkLifeBalance_vs_Attrition.png"),
-        ("Job Satisfaction vs Attrition", "JobSatisfaction_vs_Attrition.png"),
-        ("Correlation Matrix", "Correlation_Matrix.png"),
+        ("Workforce Distribution", "Employee_Attrition_Distribution.png"),
+        ("Department-wise Risk", "Attrition_by_Department.png"),
+        ("Role-based Attrition View", "Attrition_by_JobROle.png"),
+        ("Compensation Trends", "MonthlyIncome_Vs_Attrition.png"),
+        ("Demographic Insights", "Age_Distribution.png"),
+        ("Tenure Risk Profile", "yearsAtCompany_vs_Attrition.png"),
+        ("Work-Life Balance Indicators", "WorkLifeBalance_vs_Attrition.png"),
+        ("Engagement Indicators", "JobSatisfaction_vs_Attrition.png"),
+        ("Workforce Correlation Matrix", "Correlation_Matrix.png"),
     ]
     for i in range(0, len(chart_groups), 2):
         cols = st.columns(2)
@@ -250,16 +256,16 @@ def data_analysis_page():
                 st.subheader(title)
                 st.image(str(chart_path(filename)), use_container_width=True)
 
-    st.subheader("Business Insights From Notebook")
+    st.subheader("Key Workforce Signals")
     st.write(
-        "Sales has the highest department-level attrition rate, Sales Representatives and Laboratory Technicians show elevated attrition, lower monthly income is associated with leaving, and employees with weaker work-life balance or shorter tenure tend to leave more often."
+        "Attrition risk is concentrated in Sales, with Sales Representatives and Laboratory Technicians showing elevated turnover patterns. Lower monthly income, shorter tenure, and weaker work-life balance indicators are also associated with higher attrition."
     )
 
 
 def prediction_page():
     hero(
-        "Prediction",
-        "Enter employee details. The form uses the same raw input fields, one-hot encoding, scaler, selected features, model, and 0.25 threshold from the notebook pipeline.",
+        "Risk Assessment",
+        "Enter the employee profile to generate an attrition risk assessment aligned to the approved scoring pipeline.",
     )
 
     defaults = default_employee_values(df, artifacts)
@@ -287,7 +293,7 @@ def prediction_page():
             relationship_satisfaction = st.number_input("Relationship Satisfaction", 1, 4, int(defaults["RelationshipSatisfaction"]))
             work_life_balance = st.number_input("Work Life Balance", 1, 4, int(defaults["WorkLifeBalance"]))
 
-        st.subheader("Compensation And Work History")
+        st.subheader("Compensation and Work History")
         work_a, work_b, work_c = st.columns(3)
         with work_a:
             daily_rate = st.number_input("Daily Rate", 100, 1600, int(defaults["DailyRate"]))
@@ -304,7 +310,7 @@ def prediction_page():
             total_years = st.number_input("Total Working Years", 0, 40, int(defaults["TotalWorkingYears"]))
             training = st.number_input("Training Times Last Year", 0, 6, int(defaults["TrainingTimesLastYear"]))
 
-        st.subheader("Tenure")
+        st.subheader("Tenure Profile")
         t1, t2, t3, t4 = st.columns(4)
         with t1:
             years_company = st.number_input("Years At Company", 0, 40, int(defaults["YearsAtCompany"]))
@@ -315,7 +321,7 @@ def prediction_page():
         with t4:
             years_manager = st.number_input("Years With Current Manager", 0, 17, int(defaults["YearsWithCurrManager"]))
 
-        submitted = st.form_submit_button("Predict Attrition Risk", use_container_width=True)
+        submitted = st.form_submit_button("Generate Risk Assessment", use_container_width=True)
 
     employee_input = {
         "Age": age,
@@ -351,38 +357,40 @@ def prediction_page():
     }
 
     if submitted:
-        with st.spinner("Scoring employee profile..."):
+        with st.spinner("Generating attrition risk assessment..."):
             time.sleep(0.4)
             prediction, probability, confidence = predict_attrition(
                 employee_input, model, scaler, artifacts
             )
 
         result_class = "result-leave" if prediction == 1 else "result-stay"
-        result_text = "Employee Likely to Leave" if prediction == 1 else "Employee Likely to Stay"
+        result_text = "Elevated Attrition Risk" if prediction == 1 else "Low Attrition Risk"
+        st.subheader("Assessment Outcome")
         st.markdown(f"<div class='{result_class}'>{result_text}</div>", unsafe_allow_html=True)
 
         r1, r2, r3 = st.columns(3)
         with r1:
-            st.metric("Attrition Probability", format_percent(probability))
+            st.metric("Attrition Risk Probability", format_percent(probability))
         with r2:
-            st.metric("Confidence Score", format_percent(confidence))
+            st.metric("Assessment Confidence", format_percent(confidence))
         with r3:
-            st.metric("Decision Threshold", f"{artifacts['threshold']:.2f}")
+            st.metric("Risk Threshold", f"{artifacts['threshold']:.2f}")
 
+        st.subheader("Business Interpretation")
         if prediction == 1:
             st.error(
-                "The attrition probability is above the notebook threshold. Review retention factors such as overtime, compensation, tenure, job satisfaction, and work-life balance."
+                "This profile exhibits characteristics historically associated with higher voluntary turnover. HR teams may review engagement, compensation, tenure, workload, and manager support signals in line with retention policy."
             )
         else:
             st.success(
-                "The attrition probability is below the notebook threshold. The profile is closer to employees who stayed in the training data."
+                "This profile is aligned with lower-risk historical workforce patterns. Continue standard engagement monitoring and workforce planning review cycles."
             )
 
 
 def model_performance_page():
     hero(
-        "Model Performance",
-        "Evaluation results are loaded from artifacts generated using the notebook's final Gradient Boosting model and threshold.",
+        "Model Performance Metrics",
+        "Performance indicators for the approved attrition risk scoring model and benchmarked alternatives.",
     )
     m1, m2, m3, m4, m5 = st.columns(5)
     with m1:
@@ -396,7 +404,7 @@ def model_performance_page():
     with m5:
         metric_card("ROC-AUC", f"{metrics['ROC-AUC']:.3f}")
 
-    st.subheader("Algorithms Compared")
+    st.subheader("Benchmark Summary")
     comparison = artifacts["comparison"].copy()
     st.dataframe(comparison.round(3), use_container_width=True, hide_index=True)
     comparison_long = comparison.melt(id_vars="Model", var_name="Metric", value_name="Score")
@@ -414,13 +422,13 @@ def model_performance_page():
 
     left, right = st.columns(2)
     with left:
-        st.subheader("Confusion Matrix")
+        st.subheader("Classification Outcomes")
         st.image(str(chart_path("Confusion_matrix.png")), use_container_width=True)
     with right:
-        st.subheader("ROC Curve")
+        st.subheader("Risk Discrimination Curve")
         st.image(str(chart_path("ROC_Curve.png")), use_container_width=True)
 
-    st.subheader("Feature Importance")
+    st.subheader("Risk Driver Analysis")
     importance = artifacts["feature_importance"].head(15)
     fig_imp = px.bar(
         importance.sort_values("Importance"),
@@ -435,28 +443,28 @@ def model_performance_page():
     st.plotly_chart(fig_imp, use_container_width=True)
     st.image(str(chart_path("Feature_Importance.png")), use_container_width=True)
 
-    st.subheader("Decision Threshold Analysis")
+    st.subheader("Threshold Sensitivity")
     st.image(str(chart_path("Decision_Threshold.png")), use_container_width=True)
 
 
 def about_page():
     hero(
-        "About",
-        "This app converts the completed Jupyter Notebook into a polished Streamlit dashboard while preserving the notebook implementation and reported results.",
+        "Governance",
+        "Implementation notes for model lineage, scoring methodology, and deployment assets.",
     )
-    st.subheader("Methodology")
+    st.subheader("Scoring Methodology")
     st.write(
-        "The notebook removes identifier and constant columns, maps Attrition to 1 and 0, applies one-hot encoding with drop-first categorical treatment, splits the data using stratified sampling, scales numeric columns with StandardScaler, selects the top 25 features using Random Forest importance, and evaluates Logistic Regression, Random Forest, and Gradient Boosting."
+        "The scoring workflow removes identifier and constant fields, maps Attrition to binary outcomes, applies drop-first one-hot encoding, uses stratified sampling, standardizes numeric attributes, selects the top 25 risk drivers using Random Forest importance, and benchmarks Logistic Regression, Random Forest, and Gradient Boosting."
     )
-    st.subheader("Why Gradient Boosting Was Selected")
+    st.subheader("Operational Model Selection")
     st.write(
-        "Gradient Boosting at a 0.25 threshold achieved the strongest F1 Score in the notebook comparison, balancing precision and recall for the minority attrition class. That makes it suitable for an HR screening workflow where missed high-risk employees matter."
+        "Gradient Boosting at a 0.25 threshold delivered the strongest F1 performance across benchmarked models, balancing precision and recall for attrition-risk identification."
     )
-    st.subheader("Preservation Notes")
+    st.subheader("Artifact Governance")
     st.write(
-        "Because the original folder did not include saved model artifacts, the project includes a one-time artifact builder that serializes the notebook-equivalent Gradient Boosting model, scaler, feature columns, selected features, metrics, and model comparison results. The Streamlit app itself loads those files and does not retrain."
+        "Serialized artifacts retain the approved Gradient Boosting model, scaler, feature schema, selected drivers, benchmark results, and performance metrics. Runtime scoring loads these artifacts directly and does not retrain."
     )
-    st.subheader("Project Files")
+    st.subheader("Deployment Assets")
     st.code(
         """employee_attrition/
 |-- app.py
@@ -473,11 +481,11 @@ def about_page():
     )
 
 
-if page == "Home":
+if page == "Executive Overview":
     home_page()
-elif page == "Data Analysis":
+elif page == "Workforce Analytics":
     data_analysis_page()
-elif page == "Prediction":
+elif page == "Risk Assessment":
     prediction_page()
 elif page == "Model Performance":
     model_performance_page()
